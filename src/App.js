@@ -94,26 +94,24 @@ const App = () => {
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <>
         <GlobalStyles />
-        <div className="App container">
+        <div className="App">
           <header>
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </header>
           <main>
-            <div className="task-controls">
-              <SearchBar 
-                searchText={searchText} 
-                setSearchText={setSearchText} 
-                theme={theme} 
-              />
-              <Addtodo
-                submited={handleSubmit}
-                handInput={handInput}
-                setDate={setDate}
-                date={date}
-                text={text}
-                theme={theme} // Передаем theme здесь
-              />
-            </div>
+            <SearchBar 
+              searchText={searchText} 
+              setSearchText={setSearchText} 
+              theme={theme} 
+            />
+            <Addtodo
+              submited={handleSubmit}
+              handInput={handInput}
+              setDate={setDate}
+              date={date}
+              text={text}
+              theme={theme} // Передаем theme здесь
+            />
             <p className="error">{err}</p>
             <ul className="todo-list">
               {filteredTodos.map((todo) => {

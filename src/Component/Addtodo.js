@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 const Input = styled.input`
   color: ${props => props.theme === 'dark' ? '#fff' : '#000'};
-  background-color: ${props => props.theme === 'dark' ? '#333' : '#fff'};
+  background-color: ${props => props.theme === 'dark' ? '#000000' : '#fff'};
 `;
 
 const Button = styled.button`
@@ -41,7 +41,7 @@ const Addtodo = ({ submited , handInput , setDate , date , text, theme }) => {
                     onChange={handInput} 
                     type="text" 
                     value={text} 
-                    placeholder="Добавим задачу...." 
+                    placeholder="Добавим задачу..." 
                     theme={theme}
                 />
                 <Button theme={theme}><BiPlus /></Button>

@@ -6,7 +6,7 @@ import '../style.css'; // Импортируем стили
 
 const SearchContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: left;
   margin-bottom: 20px;
 `;
 
@@ -23,11 +23,12 @@ const Input = styled.input`
   outline: none;
   border: none;
   background: none;
+  margin-left: 10px;
   width: 434px;
   line-height: 2;
   font-size: 1.5rem;
   color: ${props => props.theme === 'dark' ? '#fff' : '#000'};
-  background-color: ${props => props.theme === 'dark' ? '#333' : '#fff'};
+  background-color: ${props => props.theme === 'dark' ? '#000000' : '#fff'};
 `;
 
 const Button = styled.button`

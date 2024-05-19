@@ -82,9 +82,7 @@ body {
 
 .search-container {
   display: flex;
-  justify-content: center; /* Измените по своему усмотрению */
   margin-bottom: 20px;
-  margin-left: -100px;
 }
 
 .search-tasks {
@@ -119,7 +117,6 @@ body {
   border-radius: 8px;
   font-size: 1.7rem;
   padding-top: 6px;
-  color: #707070;
   transition: all 0.3s ease;
 }
 
@@ -133,7 +130,7 @@ body {
 
 .add-container {
   display: flex;
-  justify-content: center; /* Измените по своему усмотрению */
+  justify-content: center; 
   margin-bottom: 20px;
 }
 
