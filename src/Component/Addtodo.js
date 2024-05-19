@@ -41,7 +41,7 @@ const Addtodo = ({ submited , handInput , setDate , date , text, theme }) => {
                     onChange={handInput} 
                     type="text" 
                     value={text} 
-                    placeholder="To Do..." 
+                    placeholder="Добавим задачу...." 
                     theme={theme}
                 />
                 <Button theme={theme}><BiPlus /></Button>

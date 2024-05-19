@@ -3,6 +3,7 @@ import './style.css';
 import Addtodo from './Component/Addtodo';
 import Todos from './Component/Todos';
 import Sidebar from './Component/Sidebar';
+import SearchBar from './Component/SearchBar';
 import { format } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 import { ThemeProvider } from 'styled-components';
@@ -14,6 +15,7 @@ const App = () => {
   const [date, setDate] = useState();
   const [text, setText] = useState('');
   const [todos, setTodos] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const [err, setErr] = useState('');
   const [theme, setTheme] = useState('light');
 
@@ -84,26 +86,37 @@ const App = () => {
     ));
   };
 
+  const filteredTodos = todos.filter(todo => 
+    todo.todo.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <>
         <GlobalStyles />
-        <div className="App">
+        <div className="App container">
           <header>
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </header>
           <main>
-            <Addtodo
-              submited={handleSubmit}
-              handInput={handInput}
-              setDate={setDate}
-              date={date}
-              text={text}
-              theme={theme} // Передаем theme здесь
-            />
+            <div className="task-controls">
+              <SearchBar 
+                searchText={searchText} 
+                setSearchText={setSearchText} 
+                theme={theme} 
+              />
+              <Addtodo
+                submited={handleSubmit}
+                handInput={handInput}
+                setDate={setDate}
+                date={date}
+                text={text}
+                theme={theme} // Передаем theme здесь
+              />
+            </div>
             <p className="error">{err}</p>
             <ul className="todo-list">
-              {todos.map((todo) => {
+              {filteredTodos.map((todo) => {
                 return <Todos
                   key={todo.key}
                   text={todo.todo}
@@ -119,7 +132,7 @@ const App = () => {
           </main>
           <aside>
             <Sidebar
-              todos={todos}
+              todos={filteredTodos}
               setCompleted={completedHandle}
               deleteHandle={deleteTodo}
               onUpdateTask={handleUpdateTask}

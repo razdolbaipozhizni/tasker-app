@@ -8,7 +8,7 @@ let isCompleted = false
 let isUncompleted = false
 const Sidebar = ({ todos , setCompleted , deleteHandle, onUpdateTask, theme }) => {
     const [openSidebar , setOpenSidebar] = useState(false)
-    const [filterChecked , setfilterChecked ] = useState('All')
+    const [filterChecked , setfilterChecked ] = useState('Все')
     const [filteredTodos, setfilteredTodos] = useState(todos)
 
     const handleToggle = () => {
@@ -20,19 +20,19 @@ const Sidebar = ({ todos , setCompleted , deleteHandle, onUpdateTask, theme }) =
     }
     const filteredTodo = () => {
         switch (filterChecked) {
-            case "Completed":
+            case "Выполненные":
                 setfilteredTodos(todos.filter((todo) => todo.completed === true))
                 isAll = false
                 isUncompleted = false
                 isCompleted = true
                 break;
-            case "Uncompleted":
+            case "В процессе":
                 setfilteredTodos(todos.filter((todo) => todo.completed === false))
                 isAll = false
                 isUncompleted = true
                 isCompleted = false
                 break;
-            case "All":
+            case "Все":
                 setfilteredTodos(todos)
                 isAll = true
                 isUncompleted = false
@@ -52,9 +52,9 @@ const Sidebar = ({ todos , setCompleted , deleteHandle, onUpdateTask, theme }) =
             <h1>Todos</h1>
             <div className="filter-todos">
                 <ul onClick={filterCheck}>
-                    <li className={`${isAll && "active"}`}>All</li>
-                    <li className={`${isCompleted && "active"}`}>Completed</li>
-                    <li className={`${isUncompleted && "active"}`}>Uncompleted</li>
+                    <li className={`${isAll && "active"}`}>Все</li>
+                    <li className={`${isCompleted && "active"}`}>Выполненные</li>
+                    <li className={`${isUncompleted && "active"}`}>В процессе</li>
                 </ul>
             </div>
             <div className="sidebar-list">
