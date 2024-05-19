@@ -6,7 +6,7 @@ import { BiChevronLeft } from "react-icons/bi";
 let isAll = true
 let isCompleted = false
 let isUncompleted = false
-const Sidebar = ({ todos , setCompleted , deleteHandle }) => {
+const Sidebar = ({ todos , setCompleted , deleteHandle, onUpdateTask, theme }) => {
     const [openSidebar , setOpenSidebar] = useState(false)
     const [filterChecked , setfilterChecked ] = useState('All')
     const [filteredTodos, setfilteredTodos] = useState(todos)
@@ -67,6 +67,8 @@ const Sidebar = ({ todos , setCompleted , deleteHandle }) => {
                     todo={todo}
                     deleteHandle={deleteHandle}
                     setCompleted={setCompleted}
+                    onUpdateTask={onUpdateTask}
+                    theme={theme} // Передаем theme здесь
                 />
 
                 })}

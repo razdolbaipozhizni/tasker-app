@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import './style.css';
 import Addtodo from './Component/Addtodo';
@@ -79,6 +78,12 @@ const App = () => {
     }));
   };
 
+  const handleUpdateTask = (taskId, newText) => {
+    setTodos(todos.map(todo =>
+      todo.key === taskId ? { ...todo, todo: newText } : todo
+    ));
+  };
+
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <>
@@ -94,6 +99,7 @@ const App = () => {
               setDate={setDate}
               date={date}
               text={text}
+              theme={theme} // Передаем theme здесь
             />
             <p className="error">{err}</p>
             <ul className="todo-list">
@@ -105,6 +111,8 @@ const App = () => {
                   todo={todo}
                   setCompleted={completedHandle}
                   deleteHandle={deleteTodo}
+                  onUpdateTask={handleUpdateTask}
+                  theme={theme} // Передаем theme здесь
                 />
               })}
             </ul>
@@ -114,6 +122,8 @@ const App = () => {
               todos={todos}
               setCompleted={completedHandle}
               deleteHandle={deleteTodo}
+              onUpdateTask={handleUpdateTask}
+              theme={theme} // Передаем theme здесь
             />
           </aside>
         </div>

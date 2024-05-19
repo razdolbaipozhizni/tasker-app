@@ -2,13 +2,22 @@ import React , { useState , useRef , useEffect } from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { BiCalendarEvent } from 'react-icons/bi'
 import DatePicker from './DatePicker'
+import styled from 'styled-components'
 
+const Input = styled.input`
+  color: ${props => props.theme === 'dark' ? '#fff' : '#000'};
+  background-color: ${props => props.theme === 'dark' ? '#333' : '#fff'};
+`;
 
-const Addtodo = ({ submited , handInput , setDate , date , text }) => {
+const Button = styled.button`
+  color: ${props => props.theme === 'dark' ? '#fff' : '#000'};
+`;
+
+const Addtodo = ({ submited , handInput , setDate , date , text, theme }) => {
 
     const cal = useRef()
     const [openCal, setOpenCal] = useState(false)
-    const openCalendar = () =>{
+    const openCalendar = () => {
         setOpenCal( !openCal )
     }
 
@@ -27,10 +36,15 @@ const Addtodo = ({ submited , handInput , setDate , date , text }) => {
 
     return (
         <div className="add-todo">
-
             <form onSubmit={submited}>
-                <input onChange={handInput} type="text" value={text} placeholder="To Do..." />
-                <button><BiPlus /></button>
+                <Input 
+                    onChange={handInput} 
+                    type="text" 
+                    value={text} 
+                    placeholder="To Do..." 
+                    theme={theme}
+                />
+                <Button theme={theme}><BiPlus /></Button>
             </form>
 
             <div ref={cal} className="calendar">
@@ -39,14 +53,8 @@ const Addtodo = ({ submited , handInput , setDate , date , text }) => {
                 </div>  
                 {openCal && <DatePicker date={date} setDate={setDate} />}
             </div>
-
-            {/* <div className="dates">
-                <h1>{date && format(date, 'dd MMM yyyy', { locale: enGB })}</h1>
-            </div> */}
         </div>
     )
-
 }
-
 
 export default Addtodo

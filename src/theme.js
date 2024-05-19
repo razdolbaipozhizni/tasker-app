@@ -7,7 +7,7 @@ export const lightTheme = {
     buttonText: '#000000', // Цвет текста на кнопке
     toggleBackground: '#ddd', // Цвет фона переключателя
     toggleColor: '#000000', // Цвет текста на переключателе
-    toggleBorder: '#5D00A5', // Цвет границы переключателя
+    toggleBorder: '#6B8096', // Цвет границы переключателя
     active: '#6C63FF', // Цвет активного элемента
 };
 
