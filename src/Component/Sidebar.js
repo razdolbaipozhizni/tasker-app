@@ -1,11 +1,7 @@
-import React , { useState , useEffect } from 'react';
-import styled from 'styled-components';
-import Todos from './Todos';
+import React, { useState } from 'react';
+import styled, { ThemeProvider } from 'styled-components';
 import { BiChevronRight, BiChevronLeft } from "react-icons/bi";
-
-let isAll = true;
-let isCompleted = false;
-let isUncompleted = false;
+import { FaStar, FaCalendarAlt, FaList } from 'react-icons/fa';
 
 const SidebarContainer = styled.div`
   background: ${({ theme }) => theme.background};
@@ -16,104 +12,83 @@ const SidebarContainer = styled.div`
 const SidebarButton = styled.button`
   background: none;
   border: 2px solid #5D00A5;
-  color: #5D00A5; // Вы можете убрать это, если стрелка должна быть другого цвета
+  color: #5D00A5;
   cursor: pointer;
   position: absolute;
   top: 50%;
-  left: 349px; // Это значение может быть изменено, чтобы лучше соответствовать вашему layout
-  transform: translateY(-50%); // Центрирование по вертикали
+  left: 349px;
+  transform: translateY(-50%);
   font-size: 1.7rem;
   width: 40px;
   height: 80px;
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
-  padding-top: 5px; // Скорректировал стиль padding
+  padding-top: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
 
   svg {
-    color: #5D00A5; // Цвет стрелки
+    color: #5D00A5;
   }
 `;
 
+const FilterButton = styled.button`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  font-size: 1.2rem;
+  background: ${({ theme }) => theme.buttonsBackground};
+  color: ${({ theme }) => theme.buttonText};
+  border: 3px solid #5D00A5;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 8px;
 
-const Sidebar = ({ todos , setCompleted , deleteHandle, onUpdateTask, theme }) => {
-    const [openSidebar , setOpenSidebar] = useState(false);
-    const [filterChecked , setfilterChecked ] = useState('Все');
-    const [filteredTodos, setfilteredTodos] = useState(todos);
+  &:hover {
+    background: ${({ theme }) => theme.buttonHover};
+  }
 
-    const handleToggle = () => {
-        setOpenSidebar(!openSidebar);
-    };
+  svg {
+    margin-right: 10px;
+    color: ${({ theme }) => theme.iconColor};
+  }
+`;
 
-    const filterCheck = (e) => {
-        setfilterChecked(e.target.innerText);
-    };
+const Sidebar = ({ setFilter, theme }) => {
+  const [openSidebar, setOpenSidebar] = useState(false);
 
-    const filteredTodo = () => {
-        switch (filterChecked) {
-            case "Выполненные":
-                setfilteredTodos(todos.filter((todo) => todo.completed === true));
-                isAll = false;
-                isUncompleted = false;
-                isCompleted = true;
-                break;
-            case "В процессе":
-                setfilteredTodos(todos.filter((todo) => todo.completed === false));
-                isAll = false;
-                isUncompleted = true;
-                isCompleted = false;
-                break;
-            case "Все":
-                setfilteredTodos(todos);
-                isAll = true;
-                isUncompleted = false;
-                isCompleted = false;
-                break;
-            default:
-                setfilteredTodos(todos);
-                break;
-        }
-    };
+  const handleToggle = () => {
+    setOpenSidebar(!openSidebar);
+  };
 
-    useEffect(() => {
-        filteredTodo();
-    }, [todos, filterChecked]);
-
-    return (
-        <SidebarContainer className={`sidebar ${openSidebar && "display-sidebar"}`}>
-            <h1>Todos</h1>
-            <div className="filter-todos">
-                <ul onClick={filterCheck}>
-                    <li className={`${isAll && "active"}`}>Все</li>
-                    <li className={`${isCompleted && "active"}`}>Выполненные</li>
-                    <li className={`${isUncompleted && "active"}`}>В процессе</li>
-                </ul>
-            </div>
-            <div className="sidebar-list">
-                <ul>
-                    {filteredTodos.map((todo) => {
-                        return (
-                            <Todos
-                                key={todo.key}
-                                text={todo.todo}
-                                date={todo.date}
-                                todo={todo}
-                                deleteHandle={deleteHandle}
-                                setCompleted={setCompleted}
-                                onUpdateTask={onUpdateTask}
-                                theme={theme}
-                            />
-                        );
-                    })}
-                </ul>
-            </div>
-            <SidebarButton onClick={handleToggle} className="toggle-sidebar">
-                {openSidebar ? <BiChevronLeft /> : <BiChevronRight />}
-            </SidebarButton>
-        </SidebarContainer>
-    );
+  return (
+    <ThemeProvider theme={theme}>
+      <SidebarContainer className={`sidebar ${openSidebar && "display-sidebar"}`}>
+        <h1>Tasker</h1>
+        <FilterButton onClick={() => setFilter('Важно')}>
+          <FaStar /> Важно
+        </FilterButton>
+        <FilterButton onClick={() => setFilter('Запланировано')}>
+          <FaCalendarAlt /> Запланировано
+        </FilterButton>
+        <FilterButton onClick={() => setFilter('Все')}>
+          <FaList /> Все
+        </FilterButton>
+        <FilterButton onClick={() => setFilter('Выполненные')}>
+          <FaList /> Выполненные
+        </FilterButton>
+        <FilterButton onClick={() => setFilter('В процессе')}>
+          <FaList /> В процессе
+        </FilterButton>
+        <SidebarButton onClick={handleToggle} className="toggle-sidebar">
+          {openSidebar ? <BiChevronLeft /> : <BiChevronRight />}
+        </SidebarButton>
+      </SidebarContainer>
+    </ThemeProvider>
+  );
 };
 
 export default Sidebar;

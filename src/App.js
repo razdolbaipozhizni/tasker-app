@@ -4,7 +4,7 @@ import Addtodo from './Component/Addtodo';
 import Todos from './Component/Todos';
 import Sidebar from './Component/Sidebar';
 import SearchBar from './Component/SearchBar';
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from './theme';
@@ -18,6 +18,8 @@ const App = () => {
   const [searchText, setSearchText] = useState('');
   const [err, setErr] = useState('');
   const [theme, setTheme] = useState('light');
+  const [filterChecked, setFilterChecked] = useState('Все');
+  const [filteredTodos, setFilteredTodos] = useState(todos);
 
   useEffect(() => {
     getLocalstorage();
@@ -26,6 +28,10 @@ const App = () => {
   useEffect(() => {
     saveLs(todos);
   }, [todos]);
+
+  useEffect(() => {
+    filterAndSearchTodos();
+  }, [todos, filterChecked, searchText]);
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -46,7 +52,7 @@ const App = () => {
     if (time === undefined) {
       time = "today";
     }
-    setTodos([...todos, { todo: text, date: time, completed: false, key: id }]);
+    setTodos([...todos, { todo: text, date: time, completed: false, key: id, important: false }]);
     setDate();
     setText('');
     setErr('');
@@ -64,6 +70,41 @@ const App = () => {
       setTodos(todoLs);
     }
   };
+
+  const toggleImportant = (id) => {
+    setTodos(todos.map((todo) => {
+      if (todo.key === id) {
+        return {
+          ...todo, important: !todo.important
+        };
+      }
+      return todo;
+    }));
+  };
+
+  const updateDate = (id, newDate) => {
+    let formattedDate;
+    try {
+      if (newDate === "today") {
+        formattedDate = format(new Date(), 'dd MMM yyyy', { locale: enGB });
+      } else {
+        formattedDate = format(new Date(newDate), 'dd MMM yyyy', { locale: enGB });
+      }
+    } catch (error) {
+      console.error("Invalid date value:", newDate);
+      formattedDate = "Invalid date";
+    }
+  
+    setTodos(todos.map((todo) => {
+      if (todo.key === id) {
+        return {
+          ...todo, date: formattedDate || 'today'
+        };
+      }
+      return todo;
+    }));
+  };
+  
 
   const deleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.key !== id));
@@ -86,9 +127,61 @@ const App = () => {
     ));
   };
 
-  const filteredTodos = todos.filter(todo => 
-    todo.todo.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const moveTask = (id, direction) => {
+    const index = todos.findIndex(todo => todo.key === id);
+    if (index < 0) return;
+  
+    const newTodos = [...todos];
+    const [task] = newTodos.splice(index, 1);
+  
+    if (direction === 'up' && index > 0) {
+      newTodos.splice(index - 1, 0, task);
+    } else if (direction === 'down' && index < todos.length - 1) {
+      newTodos.splice(index + 1, 0, task);
+    } else {
+      // Восстановление задачи на исходное место, если не удалось переместить
+      newTodos.splice(index, 0, task);
+    }
+  
+    setTodos(newTodos);
+  };
+  
+
+
+  const filterCheck = (filter) => {
+    setFilterChecked(filter);
+  };
+
+  const filterAndSearchTodos = () => {
+    let filtered = todos;
+
+    switch (filterChecked) {
+      case "Выполненные":
+        filtered = todos.filter((todo) => todo.completed === true);
+        break;
+      case "В процессе":
+        filtered = todos.filter((todo) => todo.completed === false);
+        break;
+      case "Важно":
+        filtered = todos.filter((todo) => todo.important === true);
+        break;
+      case "Запланировано":
+        filtered = todos.filter((todo) => isToday(new Date(todo.date)));
+        break;
+      case "Все":
+        filtered = todos;
+        break;
+      default:
+        filtered = todos;
+        break;
+    }
+
+    const searched = filtered.filter(todo =>
+      todo.todo.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    setFilteredTodos(searched);
+  };
 
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
@@ -110,11 +203,11 @@ const App = () => {
               setDate={setDate}
               date={date}
               text={text}
-              theme={theme} // Передаем theme здесь
+              theme={theme}
             />
             <p className="error">{err}</p>
             <ul className="todo-list">
-              {filteredTodos.map((todo) => {
+              {filteredTodos.map((todo, index) => {
                 return <Todos
                   key={todo.key}
                   text={todo.todo}
@@ -123,18 +216,18 @@ const App = () => {
                   setCompleted={completedHandle}
                   deleteHandle={deleteTodo}
                   onUpdateTask={handleUpdateTask}
-                  theme={theme} // Передаем theme здесь
+                  theme={theme}
+                  toggleImportant={toggleImportant}
+                  updateDate={updateDate}
+                  moveTask={moveTask}
                 />
               })}
             </ul>
           </main>
           <aside>
             <Sidebar
-              todos={filteredTodos}
-              setCompleted={completedHandle}
-              deleteHandle={deleteTodo}
-              onUpdateTask={handleUpdateTask}
-              theme={theme} // Передаем theme здесь
+              setFilter={filterCheck}
+              theme={theme === 'light' ? lightTheme : darkTheme}
             />
           </aside>
         </div>
